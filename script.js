@@ -31,6 +31,7 @@ function onMapLoad() {
         // separar tipo de restaurante del array
         kindFood = kindFood.toString();
         kindFood = kindFood.split(',');
+        kindFood.unshift("Todos")
         console.log(kindFood)
 
         // eliminar los tipos de restaurante repetidos
@@ -51,13 +52,9 @@ function onMapLoad() {
         for (let marker of data_markers) {
             markers.addLayer(
                 L.marker([marker.lat, marker.lng]).bindPopup(
-                    "<b>" +
-                    marker.name +
-                    "</b><br>" +
-                    marker.address +
-                    "<br><i>" +
-                    marker.kind_food +
-                    "<i>"
+                    "<strong>" + marker.name +
+                    "</strong><br>" + marker.address +
+                    "<br><i>" + marker.kind_food + "<i>"
                 )
             );
         }
@@ -76,8 +73,33 @@ function render_to_map(data_markers, filter) {
 
     /*
     FASE 3.2
-    	1) Limpio todos los marcadores
+        1) Limpio todos los marcadores
     	2) Realizo un bucle para decidir que marcadores cumplen el filtro, y los agregamos al mapa
     */
 
+    //    eliminar marcadores
+    markers.clearLayers();
+
+    // Bucle para filtros
+    for (marker of data_markers) {
+
+        if (marker.kind_food.includes(filter)) {
+            markers.addLayer(
+                L.marker([marker.lat, marker.lng]).bindPopup(
+                    "<strong>" + marker.name +
+                    "</strong><br>" + marker.address +
+                    "<br><i>" + marker.kind_food + "<i>"
+                )
+            );
+        } else if (filter == 'Todos') {
+            markers.addLayer(
+                L.marker([marker.lat, marker.lng]).bindPopup(
+                    "<strong>" + marker.name +
+                    "</strong><br>" + marker.address +
+                    "<br><i>" + marker.kind_food + "<i>"
+                )
+            );
+        }
+    }
+    map.addLayer(markers);
 }
